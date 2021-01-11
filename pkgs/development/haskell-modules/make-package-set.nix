@@ -327,6 +327,7 @@ in package-set { inherit pkgs lib callPackage; } self // {
         # packages.  You should set this to true if you have benchmarks defined
         # in your local packages that you want to be able to run with cabal benchmark
         doBenchmark ? false
+      , genericBuilderArgsModifier ? (args: args)
       , ...
       } @ args:
       let
@@ -443,7 +444,7 @@ in package-set { inherit pkgs lib callPackage; } self // {
         # This is a derivation created with `haskellPackages.mkDerivation`.
         #
         # pkgWithCombinedDeps :: HaskellDerivation
-        pkgWithCombinedDeps = self.mkDerivation genericBuilderArgs;
+        pkgWithCombinedDeps = self.mkDerivation (genericBuilderArgsModifier genericBuilderArgs);
 
         # The derivation returned from `envFunc` for `pkgWithCombinedDeps`.
         #
@@ -457,7 +458,7 @@ in package-set { inherit pkgs lib callPackage; } self // {
         # pkgWithCombinedDepsDevDrv :: Derivation
         pkgWithCombinedDepsDevDrv = pkgWithCombinedDeps.envFunc { inherit withHoogle; };
 
-        mkDerivationArgs = builtins.removeAttrs args [ "packages" "withHoogle" "doBenchmark" ];
+        mkDerivationArgs = builtins.removeAttrs args [ "genericBuilderArgsModifier" "packages" "withHoogle" "doBenchmark" ];
 
       in pkgWithCombinedDepsDevDrv.overrideAttrs (old: mkDerivationArgs // {
         nativeBuildInputs = old.nativeBuildInputs ++ mkDerivationArgs.nativeBuildInputs or [];
