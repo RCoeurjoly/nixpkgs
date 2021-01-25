@@ -16,8 +16,18 @@ rustPlatform.buildRustPackage rec {
 
   cargoSha256 = "1lf4k3n89w2797c1yrj1dp97y8a8d5hnixr1nwa2qcq1sxmm5rcg";
 
+  postPatch = ''
+    # remove search path entry which would reference /build
+    sed -i '/env!("CARGO_MANIFEST_DIR")/d' src/lib.rs
+  '';
+
   postInstall = ''
-    wrapProgram $out/bin/zz --prefix PATH ":" "${lib.getBin z3}/bin"
+    mkdir -p "$out/share/zz"
+    cp -r modules "$out/share/zz/"
+
+    wrapProgram $out/bin/zz \
+      --prefix PATH ":" "${lib.getBin z3}/bin" \
+      --suffix ZZ_MODULE_PATHS ":" "$out/share/zz/modules"
   '';
 
   meta = with lib; {
