@@ -6,7 +6,7 @@ rustPlatform.buildRustPackage rec {
 
   # commit chosen by using the latest build from http://bin.zetz.it/
   src = fetchFromGitHub {
-    owner = "aep";
+    owner = "zetzit";
     repo = "zz";
     rev = "0b5c52674e9adf795fbfb051d4dceef3126e669f";
     sha256 = "0bb77ll1g5i6a04ybpgx6lqsb74xs4v4nyqm9j4j6x24407h8l89";
@@ -22,7 +22,7 @@ rustPlatform.buildRustPackage rec {
 
   meta = with lib; {
     description = "🍺🐙 ZetZ a zymbolic verifier and tranzpiler to bare metal C";
-    homepage = "https://github.com/aep/zz";
+    homepage = "https://github.com/zetzit/zz";
     license = licenses.mit;
     maintainers = [ maintainers.marsam ];
   };
